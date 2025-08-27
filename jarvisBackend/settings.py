@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-5&%r9!*s!!+k-&4po74jwv8+3kw)6*6t3c3a$&l7*9a_!)#24x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://jarvis-ai-backend-nu7x.onrender.com']
 
 
 
