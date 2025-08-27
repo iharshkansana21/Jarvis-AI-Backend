@@ -10,9 +10,10 @@ import google.generativeai as genai
 from django.conf import settings
 from .models import AIHistory
 
-# configure once (you already have this)
+# 🔹 Configure Gemini once (from settings.py env variable)
 genai.configure(api_key=settings.GEMINI_API_KEY)
 model = genai.GenerativeModel("models/gemini-2.5-flash")
+
 
 @csrf_exempt
 def react_register(request):
@@ -34,6 +35,7 @@ def react_register(request):
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
 @csrf_exempt
 def react_login(request):
     if request.method == 'POST':
@@ -51,17 +53,19 @@ def react_login(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    # ✅ Always return something
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 @csrf_exempt
 def react_logout(request):
     logout(request)
     return JsonResponse({'message': 'Logged out successfully'}, status=200)
 
+
 @login_required
 def check_auth(request):
     return JsonResponse({'user': request.user.username})
+
 
 @csrf_exempt
 @login_required
@@ -81,22 +85,25 @@ def ask_ai(request):
     if not prompt:
         return JsonResponse({"error": "Missing 'prompt' in request body."}, status=400)
     
+    # If user asks about past history
     if "what" in prompt.lower() and "past" in prompt.lower():
         history = AIHistory.objects.filter(user=request.user).order_by('-timestamp')[:5]
         if not history.exists():
             return JsonResponse({"response": "You have no past interactions with me."})
 
-        # Make it sound conversational
         past_questions = [h.prompt for h in history]
         past_str = ", ".join(past_questions)
         return JsonResponse({
             "response": f"In the past, you asked me about: {past_str}."
         })
 
+    # 🔹 Use Gemini model to generate response
     try:
         short_prompt = f"Answer briefly in 1-2 sentences: {prompt}"
         response = model.generate_content(short_prompt)
         answer = response.text.strip()
+
+        # Save to history
         AIHistory.objects.create(
             user=request.user,
             prompt=prompt,
@@ -104,7 +111,4 @@ def ask_ai(request):
         )
         return JsonResponse({"response": answer})
     except Exception as e:
-        # return error message but don't leak secrets in production
         return JsonResponse({"error": str(e)}, status=500)
-
-
