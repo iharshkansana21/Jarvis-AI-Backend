@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+# Load environment variables from .env
+from dotenv import load_dotenv
+load_dotenv()
+
+# Access your Gemini API key
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +33,7 @@ SECRET_KEY = 'django-insecure-5&%r9!*s!!+k-&4po74jwv8+3kw)6*6t3c3a$&l7*9a_!)#24x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://jarvisv1.netlify.app', 'http://localhost:5173']
-
-GEMINI_API_KEY = "AIzaSyBlh2qGC95P6zZi3xV5s0b0MBPsuy4n_08"
+ALLOWED_HOSTS = ['*']
 
 
 
