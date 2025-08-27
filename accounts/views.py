@@ -2,10 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 import json
-import subprocess
-from django.http import JsonResponse, HttpResponse
 import google.generativeai as genai
 from django.conf import settings
 from .models import AIHistory
@@ -62,14 +59,17 @@ def react_logout(request):
     return JsonResponse({'message': 'Logged out successfully'}, status=200)
 
 
-@login_required
 def check_auth(request):
-    return JsonResponse({'user': request.user.username})
+    if request.user.is_authenticated:
+        return JsonResponse({'user': request.user.username})
+    return JsonResponse({'user': None}, status=401)  # Unauthorized
 
 
 @csrf_exempt
-@login_required
 def ask_ai(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
+    
     # Only accept POST for JSON payloads
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method. Use POST with JSON."}, status=405)
