@@ -64,17 +64,11 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://jarvis-ai-frontend-yfyn.onrender.com',
+    'https://jarvisv1.netlify.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://jarvis-ai-frontend-yfyn.onrender.com']
-
-# Enable cross-site cookies
-SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://jarvisv1.netlify.app']
 
 
 ROOT_URLCONF = 'jarvisBackend.urls'
