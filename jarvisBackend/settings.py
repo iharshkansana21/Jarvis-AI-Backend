@@ -35,9 +35,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['jarvis-ai-backend-nu7x.onrender.com']
 
-LOGIN_URL = '/accounts/react-login/'
-
-
 # Application definition
 
 INSTALLED_APPS = [
